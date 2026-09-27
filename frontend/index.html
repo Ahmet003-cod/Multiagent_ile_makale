@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Workflow | Researcher • Writer • Reviewer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🤖</span>
+                <h1>Multi-Agent <span class="highlight">Workflow</span></h1>
+            </div>
+            <p class="subtitle">LangChain + LangGraph | Researcher • Writer • Reviewer</p>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main">
+        <!-- Interactive Scoping & Chat Section -->
+        <section class="input-section" id="scopingSection">
+            <div class="input-card">
+                <div class="card-header-row">
+                    <div>
+                        <h2>🎓 Akademik Danışman & Ön Planlama</h2>
+                        <p class="input-description">
+                            Araştırma konunuzu yazın; Baş Editör danışmanımızla sohbet ederek alt odak alanını, 
+                            makale türünü ve görsel sayısını netleştirin veya doğrudan tek tıkla yazımı başlatın.
+                        </p>
+                    </div>
+                    <button class="reset-chat-btn" onclick="resetChat()" title="Sohbeti ve konuyu sıfırla">
+                        🔄 Sıfırla
+                    </button>
+                </div>
+
+                <!-- Scope Summary Badges -->
+                <div class="scope-badges-bar" id="scopeBadgesBar">
+                    <div class="scope-badge">
+                        <span class="badge-icon">📌</span>
+                        <span class="badge-label">Ana Konu:</span>
+                        <span class="badge-val" id="badgeTopic">Belirtilmedi</span>
+                    </div>
+                    <div class="scope-badge" id="badgeTitleContainer" style="display: none;">
+                        <span class="badge-icon">🏷️</span>
+                        <span class="badge-label">Akademik Başlık:</span>
+                        <span class="badge-val" id="badgeTitle">-</span>
+                    </div>
+                    <div class="scope-badge">
+                        <span class="badge-icon">🎯</span>
+                        <span class="badge-label">Alt Odak:</span>
+                        <span class="badge-val" id="badgeFocus">Tüm Kapsam</span>
+                    </div>
+                    <div class="scope-badge">
+                        <span class="badge-icon">📄</span>
+                        <span class="badge-label">Format:</span>
+                        <span class="badge-val" id="badgeType">Hakemli Dergi Makalesi</span>
+                    </div>
+                    <div class="scope-badge">
+                        <span class="badge-icon">🏛️</span>
+                        <span class="badge-label">Platform:</span>
+                        <span class="badge-val" id="badgePlatform">DergiPark (TR Dizin)</span>
+                    </div>
+                    <div class="scope-badge">
+                        <span class="badge-icon">📑</span>
+                        <span class="badge-label">Hacim:</span>
+                        <span class="badge-val" id="badgePages">10-15 Sayfa</span>
+                    </div>
+                    <div class="scope-badge">
+                        <span class="badge-icon">🖼️</span>
+                        <span class="badge-label">Şema/Görsel:</span>
+                        <span class="badge-val" id="badgeImages">4 Adet</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Chat Dialogue -->
+                <div class="chat-container" id="chatContainer">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-bubble advisor">
+                            <div class="bubble-header">
+                                <span class="avatar">👨‍🏫</span>
+                                <span class="sender-name">Akademik Baş Editör</span>
+                            </div>
+                            <div class="bubble-content">
+                                <p>Merhaba! Yazmak istediğiniz araştırma konusunu (örn: <em>"Yapay Zeka"</em>, <em>"Kuantum Hesaplama"</em>, <em>"Biyoteknoloji ve Etik"</em>) aşağıya yazıp <strong>Enter</strong> tuşuna basınız.</p>
+                                <p>Birlikte akademik başlığınızı, alt odak alanlarını, hedef yayın platformunu (DergiPark TR Dizin, IEEE/Elsevier, arXiv, Medium vb.), sayfa hacmini ve görsel sayısını netleştireceğiz.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Suggestion Chips Box -->
+                <div class="options-panel" id="optionsBox" style="display: none;">
+                    <div class="options-title" id="optionsTitle">💡 Danışman Önerileri (Tek Tıkla Seçin):</div>
+                    <div class="chip-groups-container">
+                        <div class="chip-group" id="titleChipsGroup" style="display: none;">
+                            <span class="group-label">🏷️ Önerilen Akademik Başlıklar (Seçiniz):</span>
+                            <div class="chips-list" id="titleChipsList"></div>
+                        </div>
+                        <div class="chip-group" id="focusChipsGroup" style="display: none;">
+                            <span class="group-label">🎯 Alt Odak:</span>
+                            <div class="chips-list" id="focusChipsList"></div>
+                        </div>
+                        <div class="chip-group" id="platformChipsGroup" style="display: none;">
+                            <span class="group-label">🏛️ Hedef Platform:</span>
+                            <div class="chips-list" id="platformChipsList"></div>
+                        </div>
+                        <div class="chip-group" id="pageChipsGroup" style="display: none;">
+                            <span class="group-label">📑 Hedef Sayfa / Hacim:</span>
+                            <div class="chips-list" id="pageChipsList"></div>
+                        </div>
+                        <div class="chip-group" id="paperTypeChipsGroup" style="display: none;">
+                            <span class="group-label">📄 Format / Tür:</span>
+                            <div class="chips-list" id="paperTypeChipsList"></div>
+                        </div>
+                        <div class="chip-group" id="imageChipsGroup" style="display: none;">
+                            <span class="group-label">🖼️ Şema Adedi:</span>
+                            <div class="chips-list" id="imageChipsList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Controls -->
+                <div class="chat-input-wrapper">
+                    <div class="input-row">
+                        <textarea 
+                            id="taskInput" 
+                            placeholder="Konunuzu veya danışmana iletmek istediğiniz detayları yazın... (Enter ile gönder, Shift+Enter yeni satır)"
+                            rows="2"
+                        ></textarea>
+                        <button id="sendChatBtn" class="btn-send" onclick="handleChatSubmit()" title="Enter ile de gönderebilirsiniz">
+                            <span class="btn-icon">💬</span>
+                            <span class="btn-text">Danışmana İlet</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Execution Buttons -->
+                <div class="action-buttons-row">
+                    <button id="startWorkflowBtn" class="btn-start-primary" onclick="startWorkflowWithCurrentScope()">
+                        <span class="btn-icon">🚀</span>
+                        <span class="btn-text">Seçilen Kapsamla Makaleyi Başlat</span>
+                    </button>
+                    <button id="quickStartBtn" class="btn-quick-start" onclick="quickStartWorkflow()" title="Danışman aşamasını atlayıp doğrudan yazımı başlatır">
+                        <span class="btn-icon">⚡</span>
+                        <span class="btn-text">Hızlı Başlat</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Pipeline Visualization -->
+        <section class="pipeline-section" id="pipelineSection" style="display: none;">
+            <h2>🔄 Agent Pipeline</h2>
+            <div class="pipeline">
+                <div class="pipeline-step" id="step-researcher">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-info">
+                        <span class="step-name">Researcher</span>
+                        <span class="step-status" id="status-researcher">Bekliyor</span>
+                    </div>
+                    <div class="step-progress">
+                        <div class="progress-bar" id="progress-researcher"></div>
+                    </div>
+                </div>
+
+                <div class="pipeline-arrow">→</div>
+
+                <div class="pipeline-step" id="step-writer">
+                    <div class="step-icon">✍️</div>
+                    <div class="step-info">
+                        <span class="step-name">Writer</span>
+                        <span class="step-status" id="status-writer">Bekliyor</span>
+                    </div>
+                    <div class="step-progress">
+                        <div class="progress-bar" id="progress-writer"></div>
+                    </div>
+                </div>
+
+                <div class="pipeline-arrow">→</div>
+
+                <div class="pipeline-step" id="step-reviewer">
+                    <div class="step-icon">📋</div>
+                    <div class="step-info">
+                        <span class="step-name">Reviewer</span>
+                        <span class="step-status" id="status-reviewer">Bekliyor</span>
+                    </div>
+                    <div class="step-progress">
+                        <div class="progress-bar" id="progress-reviewer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revision Indicator -->
+            <div class="revision-info" id="revisionInfo" style="display: none;">
+                <span class="revision-icon">🔁</span>
+                <span id="revisionText">Revizyon #1 — Tekrar araştırma yapılıyor...</span>
+            </div>
+        </section>
+
+        <!-- Logs Section -->
+        <section class="logs-section" id="logsSection" style="display: none;">
+            <h2>📊 Agent Logları</h2>
+            <div class="logs-container" id="logsContainer">
+                <!-- Loglar buraya dinamik olarak eklenir -->
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('research')" id="tab-research">
+                    🔍 Araştırma
+                </button>
+                <button class="tab" onclick="switchTab('draft')" id="tab-draft">
+                    ✍️ Makale
+                </button>
+                <button class="tab" onclick="switchTab('review')" id="tab-review">
+                    📋 Değerlendirme
+                </button>
+                <button class="tab" onclick="switchTab('final')" id="tab-final">
+                    ✅ Son Çıktı
+                </button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div class="tab-content active" id="content-research">
+                <div class="result-card">
+                    <h3>🔍 Araştırma Verileri</h3>
+                    <div class="result-body" id="researchOutput">
+                        <p class="placeholder">Araştırma sonuçları burada görünecek...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="content-draft">
+                <div class="result-card">
+                    <h3>✍️ Makale Taslağı</h3>
+                    <div class="result-body" id="draftOutput">
+                        <p class="placeholder">Makale taslağı burada görünecek...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="content-review">
+                <div class="result-card">
+                    <h3>📋 Reviewer Değerlendirmesi</h3>
+                    <div class="result-body" id="reviewOutput">
+                        <p class="placeholder">Değerlendirme burada görünecek...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="content-final">
+                <div class="result-card">
+                    <h3>&#10004; Onaylanmis Son Makale</h3>
+                    <div class="result-body" id="finalOutput">
+                        <p class="placeholder">Son cikti burada gorunecek...</p>
+                    </div>
+                    <div class="result-actions">
+                        <button class="copy-btn" onclick="copyToClipboard()">
+                            Kopyala
+                        </button>
+                        <div class="download-container" id="downloadContainer" style="display: none;">
+                            <button class="download-btn" onclick="downloadWord()">
+                                &#128196; Word Olarak Indir (.docx)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Error Section -->
+        <section class="error-section" id="errorSection" style="display: none;">
+            <div class="error-card">
+                <span class="error-icon">⚠️</span>
+                <h3>Hata Oluştu</h3>
+                <p id="errorMessage"></p>
+                <button onclick="resetUI()">Tekrar Dene</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <p>
+            Multi-Agent Workflow System — 
+            <span class="tech-badge">LangChain</span>
+            <span class="tech-badge">LangGraph</span>
+            <span class="tech-badge">GPT-4</span>
+            <span class="tech-badge">Tavily</span>
+        </p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
