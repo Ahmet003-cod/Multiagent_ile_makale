@@ -258,11 +258,24 @@ multiagent/
 │   ├── css/
 │   │   └── style.css           # Koyu tema, responsive & glassmorphism stilleri
 │   └── js/
-│       └── app.js              # SSE olay dinleyicisi & çip etkileşim mantığı
 ├── .env.example                # Örnek ortam değişkenleri
 ├── requirements.txt            # Kök dizin bağımlılık listesi
+├── Siber_hz_1.pdf              # 📄 Örnek Çıktı: Siber Güvenlik ve Tehdit Analizi Makalesi
+├── mideum_mk.pdf               # 📄 Örnek Çıktı: Medium / TDS Formatında Teknik Blog Yazısı
+├── yapay_zeka_makale.pdf       # 📄 Örnek Çıktı: Yapay Zeka ve Çok Ajanlı Sistemler Hakemli Makalesi
+├── LICENSE                     # MIT Açık Kaynak Lisansı
 └── README.md                   # Proje dökümantasyonu
 ```
+
+---
+
+## 📚 Depoda Yer Alan Örnek Çıktı Dosyaları (.pdf)
+
+Sistemin ürettiği içerik ve tasarım kalitesini doğrudan görebilmeniz için 3 farklı formatta örnek çıktı repoda yer almaktadır:
+* **`Siber_hz_1.pdf`:** Siber güvenlik, tehdit istihbaratı ve savunma mimarilerini inceleyen kapsamlı hakemli makale çıktısı.
+* **`mideum_mk.pdf`:** Medium / Towards Data Science formatında, 1. tekil şahıs storytelling, TL;DR, şemalar ve sonda kaynakçalı teknik blog çıktısı.
+* **`yapay_zeka_makale.pdf`:** IMRaD yapısında, akademik edilgen çatılı, matematiksel analizli ve 4 teknik diyagram içeren bilimsel dergi makalesi çıktısı.
+
 
 ---
 
